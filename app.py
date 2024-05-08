@@ -6,6 +6,10 @@ import time
 from datetime import datetime
 import soundfile as sf
 import tensorflow as tf
+import argparse
+import logging
+import soundfile as sf
+from music_gan import MusicGAN  
 
 # Ensure directories exist
 os.makedirs('logs', exist_ok=True)
@@ -85,13 +89,41 @@ class AriaGen:
         sf.write(filename, music_data, self.sample_rate)
         logging.info("Music saved successfully.")
 
+
+
+def main():
+    parser = argparse.ArgumentParser(description="AriaGen Music Generation and Training")
+    parser.add_argument('--mode', type=str, choices=['generate', 'train'], help='Mode to run the application: "generate" or "train"', required=True)
+    parser.add_argument('--style', type=str, default='jazz', help='Music style for generation (e.g., jazz, pop, classical)')
+    args = parser.parse_args()
+
+    if args.mode == 'generate':
+        music_style = args.style
+        mg = AriaGen(duration=5)  # Record for 5 seconds
+        audio_data = mg.record_audio()
+        # Optionally save the input recording
+        input_filename = f'inputs/{music_style}_input_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.wav'
+        sf.write(input_filename, audio_data, mg.sample_rate)
+        music_data = mg.generate_music(audio_data, music_style)
+        mg.save_music(music_data, music_style)
+        logging.info("Music generation process completed.")
+
+    elif args.mode == 'train':
+        gan = MusicGAN()
+        data = gan.load_data()
+        result = gan.train(data)
+        if result:
+            generated_spectrogram = gan.generate_music()
+            # Convert generated spectrogram to audio, save, and play
+            audio_signal = gan.spectrogram_to_audio(generated_spectrogram, save_path='generated_music.wav', play_audio=True)
+            gan.save_models()
+
+            # To generate music using a pre-trained generator
+            gan.load_generator()
+            generated_spectrogram = gan.generate_music()
+            # Convert generated spectrogram to audio, save, and play
+            audio_signal = gan.spectrogram_to_audio(generated_spectrogram, save_path='generated_music.wav', play_audio=True)
+        print("Model training and music generation process completed.")
+
 if __name__ == "__main__":
-    music_style = input("Enter the music style you want (e.g., jazz, pop, classical): ")
-    mg = AriaGen(duration=5)  # Record for 5 seconds
-    audio_data = mg.record_audio()
-    # Optionally save the input recording
-    input_filename = f'inputs/{music_style}_input_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.wav'
-    sf.write(input_filename, audio_data, mg.sample_rate)
-    music_data = mg.generate_music(audio_data, music_style)
-    mg.save_music(music_data, music_style)
-    logging.info("Process completed.")
+    main()
