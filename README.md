@@ -83,6 +83,24 @@ By following these steps, you can enhance AriaGen's ability to generate music th
 - SoundFile
 - TensorFlow
 
+## Using Docker
+
+To simplify the installation and execution environment for AriaGen, you can use Docker. Follow these steps to build and run AriaGen using a Docker container.
+
+### Build the Docker Image
+
+First, build the Docker image from your project directory where the Dockerfile resides:
+
+```
+docker build -t ariagen .
+```
+Run the Container
+Once the image is built, you can run it:
+```
+docker run -p 4000:80 ariagen
+```
+
+
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit pull requests with your proposed changes.
