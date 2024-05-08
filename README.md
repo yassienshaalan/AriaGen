@@ -24,18 +24,56 @@ To set up AriaGen on your local machine, follow these steps:
 ```
 git clone https://github.com/yourusername/AriaGen.git
 ```
-2.Navigate to the AriaGen directory:
-
-3. Install the required Python libraries:
+2. Navigate to the AriaGen directory.
+3. Install the required Python libraries and run app:
 ```
 pip install -r requirments.txt
-'''
-4. Run app
-```
 python app.py
 ```
+## Retraining the GAN Model
 
-Follow the prompts in the terminal to choose the duration of the recording and the style of music you want to generate.
+AriaGen uses a pre-trained Generative Adversarial Network (GAN) to transform recorded audio into music. If you wish to further improve or personalize the music generation capabilities, you may consider retraining the GAN model with your own dataset.
+
+### Requirements for Retraining
+
+- A dataset of audio files and their corresponding musical style labels.
+- TensorFlow 2.x and additional libraries as needed (e.g., librosa for audio processing).
+- Adequate computational resources (GPU recommended for training).
+
+### Steps to Retrain the Model
+
+1. **Prepare Your Dataset**:
+   - Collect a diverse set of audio recordings and categorize them by musical style.
+   - Preprocess the data into a suitable format for training. This typically involves converting audio files into spectrograms or Mel-frequency cepstral coefficients (MFCCs).
+
+2. **Modify Training Scripts**:
+   - Adjust the existing training scripts to accommodate your dataset and training parameters.
+   - You can find the training scripts in the `train` directory within the repository.
+
+3. **Run the Training**:
+   - Execute the training script with the prepared data:
+     ```
+     python train/train_model.py --dataset path/to/your/dataset
+     ```
+   - Monitor the training process and adjust parameters as necessary to improve model performance.
+
+4. **Evaluate the Model**:
+   - After training, evaluate the new model using a separate validation set to ensure it generates music accurately reflecting the intended styles.
+
+5. **Integrate the New Model**:
+   - Once retraining is complete and the model performs satisfactorily, replace the existing model file in `gan_generator.h5` with the new model file.
+   - Test the integration to ensure that the application correctly utilizes the new model.
+
+### Tips for Successful Retraining
+
+- Focus on a high-quality, varied dataset to train the model.
+- Regularly save model checkpoints to avoid losing progress.
+- Experiment with different architectures and hyperparameters to find the best setup for your specific use case.
+
+By following these steps, you can enhance AriaGen's ability to generate music that better matches your preferences or improves upon the pre-trained model's capabilities.
+
+
+## Follow the prompts in the terminal to choose the duration of the recording and the style of music you want to generate.
 
 ## Dependencies
 
